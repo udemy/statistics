@@ -3,24 +3,24 @@ JVM Statistics Library
 
 This library was built to fill some of the gaps in currently available libraries. This is not intended to be the only 
 library you need for performing statistics in the JVM. In fact, the thought is that this package would be a good 
-compliment to the Apache Commons math library.
+complement to the Apache Commons math library.
 
 
 # Naming Conventions
 
-In order to have a consistent naming convention that allows for consumers of the library to more easily navigate the 
-library, we have put together some naming conventions which are followed in this library. This is not meant to be 
-exhaustive. We fully expect that as the library needs to be extended that these conventions will need to be 
+In order to have a consistent naming convention that allows for consumers of the library to more easily navigate it, 
+we have put together some naming conventions which are followed herein. This is not meant to be 
+exhaustive. We fully expect that as the library needs to be extended these conventions will need to be 
 expanded on. The naming conventions, like all parts of this library, are open for improvement via issues and pull 
-requests. This is a good example of a case when you need not write code to have a major positive contribution to the 
-library.
+requests. This is a good example of a case when you need not write code to have a major positive contribution to this 
+project.
 
-Some of the naming conventions are influenced by the Apach Commons math library.
+Some of the naming conventions are influenced by the Apache Commons math library.
 
 Distributions
 ----
 
-All distributions will fall under the `distribution` package. Distributions have different commons uses. For example, 
+All distributions will fall under the `distribution` package. Distributions have different common uses. For example, 
 the first distribution included in this package, the normal inverse gamma, is primarily used as a conjugate, Bayesian 
 prior. Thus, it has methods for Bayesian updating. This is different than, for example, the normal distribution which 
 is more often used for sampling. Consequently some distributions may be implemented with methods for their common 
