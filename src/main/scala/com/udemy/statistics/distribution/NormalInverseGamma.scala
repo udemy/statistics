@@ -54,7 +54,7 @@ case class NormalInverseGamma(μ: Double, ν: Double, α: Double, β: Double) {
           (ν * μ + likelihood.ν * likelihood.μMean) / (ν + likelihood.ν),
           ν + likelihood.ν,
           α + likelihood.α,
-          β + likelihood.β + ((likelihood.ν * ν) / (likelihood.ν + ν)) * (math.pow(likelihood.μMean - μ, 2) / 2D    )
+          β + likelihood.β + ((likelihood.ν * ν) / (likelihood.ν + ν)) * (math.pow(likelihood.μMean - μ, 2) / 2D)
         )
       }
     }
