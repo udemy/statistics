@@ -14,12 +14,21 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-name := "com.udemy.statistics"
+package com.udemy
 
-version := "0.1"
+import org.apache.commons.math3.stat.StatUtils
+import scala.Numeric.Implicits._
 
-scalaVersion := "2.11.12"
+package object statistics {
 
-libraryDependencies += "org.apache.commons" % "commons-math3" % "3.+"
-libraryDependencies += "org.scalacheck" %% "scalacheck" % "1.13.+" % "test"
-libraryDependencies += "org.scalatest" % "scalatest_2.11" % "3.0.+" % "test"
+  def sumOfSquaredDeviations[T: Numeric](data: Seq[T]): Double = {
+    if (data.isEmpty) Double.NaN
+    else {
+      val doubles = data.map(_.toDouble)
+      val dataMean = StatUtils.mean(doubles.toArray)
+      doubles.par.fold(0D) {
+        (b, x) => b + math.pow(x - dataMean, 2)
+      }
+    }
+  }
+}
