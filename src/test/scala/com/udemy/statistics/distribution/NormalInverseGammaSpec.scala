@@ -103,7 +103,7 @@ class NormalInverseGammaSpec extends FlatSpec with Matchers with GeneratorDriven
     }
   }
 
-  "posterior" should "return an appropriate posterior mu and nu" in {
+  "bayesianUpdate" should "return an appropriate posterior mu and nu" in {
 
     forAll ((Arbitrary.arbDouble.arbitrary, "μ"), (ν, "ν"), (Gen.listOf[Double](Arbitrary.arbDouble.arbitrary), "likelihood")) {
       (μ: Double, ν: Long, likelihoodList: List[Double]) =>
@@ -115,7 +115,7 @@ class NormalInverseGammaSpec extends FlatSpec with Matchers with GeneratorDriven
           anyDouble
         )
 
-        val posterior = prior.posterior(likelihood)
+        val posterior = prior.bayesianUpdate(likelihood)
 
         if (likelihood.nonEmpty) {
           val likelihoodMean = StatUtils.mean(likelihood)
@@ -137,7 +137,7 @@ class NormalInverseGammaSpec extends FlatSpec with Matchers with GeneratorDriven
     }
   }
 
-  "posterior" should "return an appropriate posterior alpha" in {
+  "bayesianUpdate" should "return an appropriate posterior alpha" in {
 
     forAll("α", "likelihood") { (α: Double, likelihood: Vector[Double]) =>
       val prior = NormalInverseGamma(
@@ -146,7 +146,7 @@ class NormalInverseGammaSpec extends FlatSpec with Matchers with GeneratorDriven
         α,
         anyDouble
       )
-      val posterior = prior.posterior(likelihood)
+      val posterior = prior.bayesianUpdate(likelihood)
 
       if (likelihood.nonEmpty) {
         posterior.α shouldEqual (α + likelihood.length / 2D)
@@ -157,7 +157,7 @@ class NormalInverseGammaSpec extends FlatSpec with Matchers with GeneratorDriven
     }
   }
 
-  "posterior" should "return an appropriate posterior beta" in {
+  "bayesianUpdate" should "return an appropriate posterior beta" in {
 
     forAll ((Arbitrary.arbDouble.arbitrary, "μ"), (ν, "ν"), (Arbitrary.arbDouble.arbitrary, "β"), (Gen.listOf[Double](Arbitrary.arbDouble.arbitrary), "likelihood")) {
       (μ: Double, ν: Long, β: Double, likelihoodList: List[Double]) =>
@@ -168,7 +168,7 @@ class NormalInverseGammaSpec extends FlatSpec with Matchers with GeneratorDriven
           anyDouble,
           β
         )
-        val posterior = prior.posterior(likelihood)
+        val posterior = prior.bayesianUpdate(likelihood)
 
         if (likelihood.nonEmpty) {
           posterior.β >= β || posterior.β.isNaN shouldEqual true
@@ -197,7 +197,7 @@ class NormalInverseGammaSpec extends FlatSpec with Matchers with GeneratorDriven
           sumOfSquaredDeviations(array) / 2D
         )
 
-        val posterior = prior.posterior(likelihood)
+        val posterior = prior.bayesianUpdate(likelihood)
 
         if (likelihoodList.nonEmpty) {
           posterior.α shouldEqual (anyDouble + likelihoodList.length / 2D)

@@ -34,9 +34,9 @@ case class NormalInverseGamma(μ: Double, ν: Double, α: Double, β: Double) {
   def σSquaredMean: Double = if (α > .5) β / (α - .5) else Double.PositiveInfinity
   def σSquaredMode: Double = β / (α + 1.5)
 
-  def posterior(likelihood: Seq[Double]): NormalInverseGamma = {
+  def bayesianUpdate(likelihood: Seq[Double]): NormalInverseGamma = {
     val array = likelihood.toArray
-    posterior(
+    bayesianUpdate(
     NormalInverseGamma(
       StatUtils.mean(array),
       likelihood.length,
@@ -45,7 +45,7 @@ case class NormalInverseGamma(μ: Double, ν: Double, α: Double, β: Double) {
     ))
   }
 
-  def posterior(likelihood: NormalInverseGamma): NormalInverseGamma = {
+  def bayesianUpdate(likelihood: NormalInverseGamma): NormalInverseGamma = {
     if (likelihood.ν < 1) this
     else {
       if (ν == 0) likelihood
