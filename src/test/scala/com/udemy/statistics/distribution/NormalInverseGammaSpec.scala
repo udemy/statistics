@@ -31,6 +31,21 @@ class NormalInverseGammaSpec extends FlatSpec with Matchers with GeneratorDriven
   private val anyDouble = 1D
   private val ν = Gen.posNum[Long]
 
+  "constructing from Seq" should "construct appropriate N-Γ parameters" in {
+    forAll((Gen.listOf[Double](Arbitrary.arbDouble.arbitrary), "doubles")) {
+      doubles: List[Double] =>
+        val NIΓ = NormalInverseGamma(doubles)
+
+        if (doubles.isEmpty) {
+          NIΓ.μMean.isNaN shouldBe true
+          NIΓ.σSquaredMode.isNaN shouldBe true
+        } else {
+          NIΓ.μMean shouldEqual StatUtils.mean(doubles.toArray)
+          NIΓ.σSquaredMode shouldEqual sumOfSquaredDeviations(doubles) / 2 / (doubles.length / 2 + 1.5)
+        }
+    }
+  }
+
   "σSquaredMean" should "return a positive number or infinity" in {
 
     forAll ("α", "β") { (α: Double, β: Double) =>

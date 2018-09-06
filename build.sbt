@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-name := "com/udemy/statistics"
+name := "com.udemy.statistics"
 
 version := "0.1"
 
