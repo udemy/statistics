@@ -33,7 +33,7 @@ class StatisticsSpec extends FlatSpec with Matchers with GeneratorDrivenProperty
           result.isNaN shouldBe true
         } else {
           val dataMean = StatUtils.mean(doubles.toArray)
-          val sumOfSquares = doubles.par.fold(0D) {
+          val sumOfSquares = doubles.fold(0D) {
             (b, x) => b + math.pow(x - dataMean, 2)
           }
           if (sumOfSquares.isNaN) result.isNaN shouldBe true

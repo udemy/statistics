@@ -34,16 +34,8 @@ case class NormalInverseGamma(μ: Double, ν: Double, α: Double, β: Double) {
   def σSquaredMean: Double = if (α > .5) β / (α - .5) else Double.PositiveInfinity
   def σSquaredMode: Double = β / (α + 1.5)
 
-  def bayesianUpdate(likelihood: Seq[Double]): NormalInverseGamma = {
-    val array = likelihood.toArray
-    bayesianUpdate(
-    NormalInverseGamma(
-      StatUtils.mean(array),
-      likelihood.length,
-      likelihood.length / 2D,
-      sumOfSquaredDeviations(array) / 2D
-    ))
-  }
+  def bayesianUpdate(likelihood: Seq[Double]): NormalInverseGamma =
+    bayesianUpdate(NormalInverseGamma(likelihood))
 
   def bayesianUpdate(likelihood: NormalInverseGamma): NormalInverseGamma = {
     if (likelihood.ν < 1) this
@@ -54,7 +46,7 @@ case class NormalInverseGamma(μ: Double, ν: Double, α: Double, β: Double) {
           (ν * μ + likelihood.ν * likelihood.μMean) / (ν + likelihood.ν),
           ν + likelihood.ν,
           α + likelihood.α,
-          β + likelihood.β + ((likelihood.ν * ν) / (likelihood.ν + ν)) * (math.pow(likelihood.μMean - μ, 2) / 2D)
+          β + likelihood.β + ((likelihood.ν * ν) / (likelihood.ν + ν)) * (math.pow(likelihood.μ - μ, 2) / 2D)
         )
       }
     }
@@ -68,8 +60,8 @@ object NormalInverseGamma {
     NormalInverseGamma(
       StatUtils.mean(doubles),
       doubles.length,
-      doubles.length / 2,
-      sumOfSquaredDeviations(doubles) / 2
+      doubles.length / 2D,
+      sumOfSquaredDeviations(doubles) / 2D
     )
   }
 }
