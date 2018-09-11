@@ -26,7 +26,7 @@ package object statistics {
     else {
       val doubles = data.map(_.toDouble)
       val dataMean = StatUtils.mean(doubles.toArray)
-      doubles.par.fold(0D) {
+      doubles.fold(0D) {
         (b, x) => b + math.pow(x - dataMean, 2)
       }
     }
