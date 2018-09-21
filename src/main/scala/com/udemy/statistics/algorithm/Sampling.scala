@@ -14,21 +14,22 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-package com.udemy
+package com.udemy.statistics.algorithm
 
 import scala.Numeric.Implicits._
+import scala.util.Random
 
-package object statistics {
+object Sampling {
 
-  def mean[T: Numeric](vec: Seq[T]): Double = vec.sum.toDouble / vec.length.toDouble
+  def randomDraw[T:Numeric](x: Seq[T]): T =
+    x(Random.nextInt(x.length))
 
-  def sumOfSquaredDeviations[T: Numeric](data: Seq[T]): Double = {
-    if (data.isEmpty) Double.NaN
-    else {
-      val dataMean = mean(data)
-      data.map(_.toDouble).fold(0D) {
-        (b, x) => b + math.pow(x - dataMean, 2)
-      }
-    }
+  def drawSample[T: Numeric](x: Seq[T], size: Int): Seq[T] = {
+    if (x.isEmpty) Seq()
+    else Vector.fill(size)(randomDraw(x))
   }
+
+  def bootstrap[T: Numeric](sample: Seq[T], draws: Int, statistic: Seq[T] => Double): Seq[Double] =
+    Vector.fill(draws)(drawSample(sample, sample.length)).map(statistic)
+
 }
