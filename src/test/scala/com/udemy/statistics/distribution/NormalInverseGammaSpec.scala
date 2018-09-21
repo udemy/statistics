@@ -41,7 +41,7 @@ class NormalInverseGammaSpec extends FlatSpec with Matchers with GeneratorDriven
           NIΓ.σSquaredMode.isNaN shouldBe true
         } else {
           NIΓ.μMean shouldEqual StatUtils.mean(doubles.toArray)
-          NIΓ.σSquaredMode shouldEqual sumOfSquaredDeviations(doubles) / 2 / (doubles.length / 2 + 1.5)
+          NIΓ.σSquaredMode shouldEqual sumOfSquaredDeviations(doubles) / 2D / (doubles.length / 2D + 1.5)
         }
     }
   }
