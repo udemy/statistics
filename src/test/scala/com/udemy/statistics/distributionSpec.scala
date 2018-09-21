@@ -16,21 +16,19 @@ limitations under the License.
 
 package com.udemy.statistics
 
-package object distribution {
-  case class Interval(lower: Double, upper: Double)
+import com.udemy.statistics.distribution.Percentile
+import org.scalatest.prop.GeneratorDrivenPropertyChecks
+import org.scalatest.{FlatSpec, Matchers}
 
-  case class Percentile(value: Double) {
-    require(value >= 0 && value <= 1, "percentile must be a value between 0 and 1")
+class distributionSpec extends FlatSpec with Matchers with GeneratorDrivenPropertyChecks {
 
-    def bounds: Interval = {
-      val lower = (1 - value) / 2
-      val upper = value + lower
-      Interval(lower, upper)
+  "Percentile" should "return Percentile or throw exception when value is not between 0 and 1" in {
+    forAll {
+      percentile: Double =>
+        if (percentile < 0 || percentile > 1)
+          assertThrows[IllegalArgumentException](Percentile(percentile))
+        else
+          Percentile(percentile).value == percentile
     }
-  }
-
-  object CredibleInterval extends Enumeration {
-    type CredibleInterval = Value
-    val HighestDensityInterval: CredibleInterval = Value
   }
 }
