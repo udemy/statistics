@@ -30,7 +30,7 @@ object Sampling {
   def drawSample[T: Numeric](x: Seq[T], size: Int): Seq[T] = {
     x.toList.toNel match {
       case None => Seq.empty
-      case Some(nel) => Vector.fill(size)(randomDraw(nel))
+      case Some(nel) => ParVector.fill(size)(randomDraw(nel)).toVector
     }
   }
 
