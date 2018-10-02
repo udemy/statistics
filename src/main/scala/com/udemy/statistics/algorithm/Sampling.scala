@@ -17,19 +17,24 @@ limitations under the License.
 package com.udemy.statistics.algorithm
 
 import scala.Numeric.Implicits._
+import scala.collection.parallel.immutable.ParVector
 import scala.util.Random
+import scalaz.NonEmptyList
+import scalaz.Scalaz._
 
 object Sampling {
 
-  def randomDraw[T:Numeric](x: Seq[T]): T =
-    x(Random.nextInt(x.length))
+  def randomDraw[T:Numeric](x: NonEmptyList[T]): T =
+    x.index(Random.nextInt(x.length)).get
 
   def drawSample[T: Numeric](x: Seq[T], size: Int): Seq[T] = {
-    if (x.isEmpty) Seq()
-    else Vector.fill(size)(randomDraw(x))
+    x.toList.toNel match {
+      case None => Seq.empty
+      case Some(nel) => Vector.fill(size)(randomDraw(nel))
+    }
   }
 
   def bootstrap[T: Numeric](sample: Seq[T], draws: Int, statistic: Seq[T] => Double): Seq[Double] =
-    Vector.fill(draws)(drawSample(sample, sample.length)).map(statistic)
+    ParVector.fill(draws)(0D).map(zero => statistic(drawSample(sample, sample.length))).toVector
 
 }
