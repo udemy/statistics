@@ -24,8 +24,9 @@ case class Normal(μ: Double, σ: Double) {
   def credibleInterval(percentile: Percentile, intervalType: CredibleInterval = CredibleInterval.HighestDensityInterval): Interval = {
     if (σ <= 0) Interval(Double.NaN, Double.NaN)
     else {
-      Interval(new NormalDistribution(μ, σ).inverseCumulativeProbability(percentile.bounds.lower),
-        new NormalDistribution(μ, σ).inverseCumulativeProbability(percentile.bounds.upper))
+      val gaussian = new NormalDistribution(μ, σ)
+      Interval(gaussian.inverseCumulativeProbability(percentile.bounds.lower),
+        gaussian.inverseCumulativeProbability(percentile.bounds.upper))
     }
   }
 }
