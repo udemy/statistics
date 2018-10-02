@@ -23,7 +23,7 @@ package object distribution {
     require(value >= 0 && value <= 1, "percentile must be a value between 0 and 1")
 
     def bounds: Interval = {
-      val lower = (1 - value) / 2
+      val lower = (1 - value) / 2D
       val upper = value + lower
       Interval(lower, upper)
     }

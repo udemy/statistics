@@ -31,4 +31,17 @@ class distributionSpec extends FlatSpec with Matchers with GeneratorDrivenProper
           Percentile(percentile).value == percentile
     }
   }
+
+  "Percentile bounds" should "return appropriate bounds for percentile" in {
+    forAll {
+      percentile: Double =>
+        if (percentile < 0 || percentile > 1)
+          assertThrows[IllegalArgumentException](Percentile(percentile))
+        else {
+          val p = Percentile(percentile)
+          p.bounds.lower shouldEqual (1 - percentile) / 2D
+          p.bounds.upper shouldEqual percentile + ((1 - percentile) / 2D)
+        }
+    }
+  }
 }
