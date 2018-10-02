@@ -14,12 +14,23 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-name := "com.udemy.statistics"
+package com.udemy.statistics
 
-version := "0.2"
+package object distribution {
+  case class Interval(lower: Double, upper: Double)
 
-scalaVersion := "2.11.12"
+  case class Percentile(value: Double) {
+    require(value >= 0 && value <= 1, "percentile must be a value between 0 and 1")
 
-libraryDependencies += "org.apache.commons" % "commons-math3" % "3.+"
-libraryDependencies += "org.scalacheck" %% "scalacheck" % "1.13.+" % "test"
-libraryDependencies += "org.scalatest" % "scalatest_2.11" % "3.0.+" % "test"
+    def bounds: Interval = {
+      val lower = (1 - value) / 2D
+      val upper = value + lower
+      Interval(lower, upper)
+    }
+  }
+
+  object CredibleInterval extends Enumeration {
+    type CredibleInterval = Value
+    val HighestDensityInterval: CredibleInterval = Value
+  }
+}
