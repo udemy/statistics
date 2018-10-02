@@ -33,8 +33,9 @@ class NormalSpec extends FlatSpec with Matchers with GeneratorDrivenPropertyChec
           interval.lower.isNaN shouldBe true
           interval.upper.isNaN shouldBe true
         } else {
-          val normalLower = new NormalDistribution(mean, standardDeviation).inverseCumulativeProbability((1 - percentile) / 2)
-          val normalUpper = new NormalDistribution(mean, standardDeviation).inverseCumulativeProbability(percentile + (1 - percentile) / 2)
+          val gaussian = new NormalDistribution(mean, standardDeviation)
+          val normalLower = gaussian.inverseCumulativeProbability((1 - percentile) / 2)
+          val normalUpper = gaussian.inverseCumulativeProbability(percentile + (1 - percentile) / 2)
           interval.lower == normalLower &&
             interval.upper == normalUpper
         }
