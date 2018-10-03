@@ -16,17 +16,17 @@ limitations under the License.
 
 package com.udemy
 
-import org.apache.commons.math3.stat.StatUtils
 import scala.Numeric.Implicits._
 
 package object statistics {
 
+  def mean[T: Numeric](vec: Seq[T]): Double = vec.sum.toDouble / vec.length.toDouble
+
   def sumOfSquaredDeviations[T: Numeric](data: Seq[T]): Double = {
     if (data.isEmpty) Double.NaN
     else {
-      val doubles = data.map(_.toDouble)
-      val dataMean = StatUtils.mean(doubles.toArray)
-      doubles.fold(0D) {
+      val dataMean = mean(data)
+      data.map(_.toDouble).fold(0D) {
         (b, x) => b + math.pow(x - dataMean, 2)
       }
     }
