@@ -24,7 +24,7 @@ import scalaz.Scalaz._
 
 object Sampling {
 
-  def randomDraw[T:Numeric](x: NonEmptyList[T]): T =
+  def randomDraw[T: Numeric](x: NonEmptyList[T]): T =
     x.index(Random.nextInt(x.length)).get
 
   def sample[T: Numeric](x: Seq[T], size: Int, withReplacement: Boolean = true): Seq[T] = {
