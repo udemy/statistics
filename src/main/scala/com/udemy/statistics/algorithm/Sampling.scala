@@ -27,14 +27,16 @@ object Sampling {
   def randomDraw[T:Numeric](x: NonEmptyList[T]): T =
     x.index(Random.nextInt(x.length)).get
 
-  def drawSample[T: Numeric](x: Seq[T], size: Int): Seq[T] = {
+  def sample[T: Numeric](x: Seq[T], size: Int, withReplacement: Boolean = true): Seq[T] = {
     x.toList.toNel match {
       case None => Seq.empty
-      case Some(nel) => ParVector.fill(size)(randomDraw(nel)).toVector
+      case Some(nel) =>
+        if (withReplacement) ParVector.fill(size)(randomDraw(nel)).toVector
+        else Random.shuffle(x).take(size)
     }
   }
 
   def bootstrap[T: Numeric](sample: Seq[T], draws: Int, statistic: Seq[T] => Double): Seq[Double] =
-    ParVector.fill(draws)(0D).map(zero => statistic(drawSample(sample, sample.length))).toVector
+    ParVector.fill(draws)(0D).map(zero => statistic(Sampling.sample(sample, sample.length))).toVector
 
 }

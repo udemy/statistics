@@ -21,20 +21,19 @@ import com.udemy.statistics.mean
 import org.scalacheck.{Arbitrary, Gen}
 import org.scalatest.{FlatSpec, Matchers}
 import org.scalatest.prop.GeneratorDrivenPropertyChecks
-import scalaz.NonEmptyList
 import scalaz.Scalaz._
 
 class SamplingSpec extends FlatSpec with Matchers with GeneratorDrivenPropertyChecks {
 
-  "drawSample" should "draw randomly with replacement from a vector of numeric types" in {
+  "sample" should "draw randomly with replacement from a vector of numeric types" in {
     forAll (Gen.listOf[Double](Arbitrary.arbDouble.arbitrary), Gen.posNum[Int]) {
       (population: List[Double], sampleSize: Int) =>
-        if (population.isEmpty) drawSample(population, sampleSize) shouldEqual List.empty
+        if (population.isEmpty) sample(population, sampleSize) shouldEqual List.empty
         else {
-          val sample = drawSample(population, sampleSize)
+          val s = sample(population, sampleSize)
 
-          sample.length shouldEqual sampleSize
-          sample.forall(population.contains(_)) shouldBe true
+          s.length shouldEqual sampleSize
+          s.forall(population.contains(_)) shouldBe true
         }
     }
   }
@@ -42,7 +41,31 @@ class SamplingSpec extends FlatSpec with Matchers with GeneratorDrivenPropertyCh
   it should "return an empty Vector when size is less than 1" in {
     forAll (Gen.listOf[Double](Arbitrary.arbDouble.arbitrary), Gen.choose(Int.MinValue, 0)) {
         (population: List[Double], sampleSize: Int) =>
-          drawSample(population, sampleSize) shouldBe empty
+          sample(population, sampleSize) shouldBe empty
+    }
+  }
+
+  it should "return a larger vector when size is greater than argument" in {
+    forAll (Gen.listOf[Double](Arbitrary.arbDouble.arbitrary), Gen.choose(1, 100)) {
+      (population: List[Double], sampleSize: Int) =>
+        sample(population, population.length + sampleSize).length > population.length
+    }
+  }
+
+  "sample without replacement" should "not have draws exceeding argument sample" in {
+    forAll (Gen.listOf[Double](Arbitrary.arbDouble.arbitrary), Gen.posNum[Int]) {
+      (population: List[Double], sampleSize: Int) =>
+        val sample = Sampling.sample(population, sampleSize, withReplacement =false)
+        sample.forall {
+          s => sample.count(_ == s) <= population.count(_ == s)
+        } shouldBe true
+    }
+  }
+
+  it should "return the same size vector when size is greater than argument" in {
+    forAll (Gen.listOf[Double](Arbitrary.arbDouble.arbitrary), Gen.choose(0, 10)) {
+      (population: List[Double], sampleSize: Int) =>
+        sample(population, population.length + sampleSize, withReplacement = false).length == population.length
     }
   }
 
