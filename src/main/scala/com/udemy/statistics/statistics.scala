@@ -20,6 +20,10 @@ import scala.Numeric.Implicits._
 
 package object statistics {
 
+  case class Probability(value: Double) {
+    require(value >= 0 && value <= 1 || value.isNaN, "Probability must be between 0 and 1 inclusive.")
+  }
+
   def mean[T: Numeric](vec: Seq[T]): Double = vec.sum.toDouble / vec.length.toDouble
 
   def sumOfSquaredDeviations[T: Numeric](data: Seq[T]): Double = {

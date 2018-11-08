@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
+organization := "com.udemy"
 name := "com.udemy.statistics"
 
 version := "0.3"
@@ -22,5 +23,7 @@ scalaVersion := "2.11.12"
 
 libraryDependencies += "org.apache.commons" % "commons-math3" % "3.+"
 libraryDependencies += "org.scalaz" %% "scalaz-core" % "7.2.26"
-libraryDependencies += "org.scalacheck" %% "scalacheck" % "1.13.+" % "test"
+libraryDependencies += "org.scalacheck" %% "scalacheck" % "1.14.+" % "test"
 libraryDependencies += "org.scalatest" % "scalatest_2.11" % "3.0.+" % "test"
+
+publishTo := sonatypePublishTo.value

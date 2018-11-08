@@ -16,7 +16,6 @@ limitations under the License.
 
 package com.udemy.statistics.algorithm
 
-import scala.Numeric.Implicits._
 import scala.collection.parallel.immutable.ParVector
 import scala.util.Random
 import scalaz.NonEmptyList
@@ -24,8 +23,11 @@ import scalaz.Scalaz._
 
 object Sampling {
 
+  def randomDraw[T: Numeric](x: NonEmptyList[T], randomInt: Int => Int): T =
+    x.index(randomInt(x.length)).get
+
   def randomDraw[T: Numeric](x: NonEmptyList[T]): T =
-    x.index(Random.nextInt(x.length)).get
+    randomDraw(x, Random.nextInt)
 
   def sample[T: Numeric](x: Seq[T], size: Int, withReplacement: Boolean = true): Seq[T] = {
     x.toList.toNel match {
@@ -38,5 +40,4 @@ object Sampling {
 
   def bootstrap[T: Numeric](sample: Seq[T], draws: Int, statistic: Seq[T] => Double): Seq[Double] =
     ParVector.fill(draws)(0D).map(zero => statistic(Sampling.sample(sample, sample.length))).toVector
-
 }
