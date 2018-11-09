@@ -25,10 +25,10 @@ import scalaz.NonEmptyList
 
 class MonteCarloSpec extends FlatSpec with Matchers {
   private val draws = 10
-  private val sampleA = "testVectorA"
-  private val sampleB = "testVectorB"
-  private val sampleC = "testVectorC"
-  private val sampleD = "testVectorD"
+  private val sampleA = "sample A"
+  private val sampleB = "sample B"
+  private val sampleC = "sample C"
+  private val sampleD = "sample D"
 
   private val datasetA = sampleA -> NonEmptyList(100, 200, 30, 44, 51, 160, 740, 10, 430, 3)
   private val datasets = Map(
@@ -41,7 +41,7 @@ class MonteCarloSpec extends FlatSpec with Matchers {
     val expectedOutput = Map(
       sampleA -> Probability(0.1),
       sampleB -> Probability(0.5),
-      sampleC -> Probability(0.5))
+      sampleC -> Probability(0.6))
     val result = highestValue(datasets, draws)
 
     result(sampleA).value >= expectedOutput(sampleA).value shouldBe true
@@ -77,16 +77,11 @@ class MonteCarloSpec extends FlatSpec with Matchers {
 
   "normal highestValue" should "appropriately distribute wins to better distributions" in {
     val expectedOutput = Map(
-      sampleA -> Probability(0.1),
-      sampleB -> Probability(0.3),
-      sampleC -> Probability(0.4),
-      sampleD -> Probability(0.1))
-    val result = highestValue(normals, draws, seed)
-
-    result(sampleA).value >= expectedOutput(sampleA).value shouldBe true
-    result(sampleB).value <= expectedOutput(sampleB).value shouldBe true
-    result(sampleC).value <= expectedOutput(sampleC).value shouldBe true
-    result(sampleD).value >= expectedOutput(sampleD).value shouldBe true
+      sampleA -> Probability(0.5),
+      sampleB -> Probability(0.0),
+      sampleC -> Probability(0.0),
+      sampleD -> Probability(0.5))
+    highestValue(normals, draws, seed) shouldBe expectedOutput
   }
 
   "normal highestValue" should "always say a normal wins if it is the only normal passed" in {

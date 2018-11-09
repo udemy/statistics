@@ -36,7 +36,10 @@ object MonteCarlo {
 
   def highestValue(options: Map[String, AbstractRealDistribution], draws: Int, seed: Option[Long] = None): Map[String, Probability] = {
     probabilitiesOfBeingBest[AbstractRealDistribution,Double](
-      (d: AbstractRealDistribution) => d.sample,
+      (d: AbstractRealDistribution) => {
+        seed.foreach(s => d.reseedRandomGenerator(s))
+        d.sample
+      },
       options,
       draws
     )
