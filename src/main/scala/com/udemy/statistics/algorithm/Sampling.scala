@@ -23,8 +23,8 @@ import scalaz.Scalaz._
 
 object Sampling {
 
-  def randomDraw[T: Numeric](x: NonEmptyList[T], randomInt: Int => Int): T =
-    x.index(randomInt(x.length)).get
+  private def randomDraw[T: Numeric](x: NonEmptyList[T], randomIndex: Int => Int): T =
+    x.index(randomIndex(x.length)).get
 
   def randomDraw[T: Numeric](x: NonEmptyList[T]): T =
     randomDraw(x, Random.nextInt)

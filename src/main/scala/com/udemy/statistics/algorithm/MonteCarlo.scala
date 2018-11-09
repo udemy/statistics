@@ -25,29 +25,19 @@ import scala.annotation.tailrec
 
 object MonteCarlo {
 
-  def probabilityBest[T:Numeric](options: Map[String, NonEmptyList[T]], draws: Int): Map[String, Probability] =
-    probabilityBest(options, draws, (nel: NonEmptyList[T]) => Sampling.randomDraw(nel))
+  def highestValue[T:Numeric](options: Map[String, NonEmptyList[T]], draws: Int): Map[String, Probability] =
+    highestValue(options, draws, (nel: NonEmptyList[T]) => Sampling.randomDraw(nel))
 
-  def probabilityBest[T:Numeric](options: Map[String, NonEmptyList[T]], draws: Int, sampler: NonEmptyList[T] => T): Map[String, Probability] = {
+  private def highestValue[T:Numeric](options: Map[String, NonEmptyList[T]], draws: Int, sampler: NonEmptyList[T] => T): Map[String, Probability] =
     probabilitiesOfBeingBest[NonEmptyList[T],T](
       sampler,
       options,
       draws)
-  }
 
-  def probabilityBest(options: Map[String, Normal], draws: Int, seed: Option[Long] = None): Map[String, Probability] = {
-    val distributions = options.map {
-      case (key, normal) =>
-      val dist = if (normal.σ == 0.0) new ConstantRealDistribution(normal.μ)
-        else new NormalDistribution(normal.μ, normal.σ)
-
-      seed.foreach(s => dist.reseedRandomGenerator(s))
-      (key, dist)
-    }
-
+  def highestValue(options: Map[String, AbstractRealDistribution], draws: Int, seed: Option[Long] = None): Map[String, Probability] = {
     probabilitiesOfBeingBest[AbstractRealDistribution,Double](
       (d: AbstractRealDistribution) => d.sample,
-      distributions,
+      options,
       draws
     )
   }
@@ -79,7 +69,6 @@ object MonteCarlo {
     if (draws <= 0 || options.isEmpty) options.map(o => (o._1, Probability(Double.NaN)))
     else {
       val totalWins: Map[String, Double] = options.map(o => (o._1, 0D))
-
       cumulateWins(sampler, options, draws, totalWins).map(t => (t._1, Probability(t._2 / draws)))
     }
   }

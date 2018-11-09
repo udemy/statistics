@@ -15,7 +15,7 @@ limitations under the License.
  */
 
 organization := "com.udemy"
-name := "com.udemy.statistics"
+name := "statistics"
 
 version := "0.3"
 
