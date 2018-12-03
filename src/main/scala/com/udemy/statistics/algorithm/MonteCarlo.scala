@@ -25,16 +25,16 @@ import scala.annotation.tailrec
 
 object MonteCarlo {
 
-  def highestValue[T:Numeric](options: Map[String, NonEmptyList[T]], draws: Int): Map[String, Probability] =
-    highestValue(options, draws, (nel: NonEmptyList[T]) => Sampling.randomDraw(nel))
+  def probabilitiesOfBeingBest[T:Numeric](options: Map[String, NonEmptyList[T]], draws: Int): Map[String, Probability] =
+    probabilitiesOfBeingBest(options, draws, (nel: NonEmptyList[T]) => Sampling.randomDraw(nel))
 
-  private def highestValue[T:Numeric](options: Map[String, NonEmptyList[T]], draws: Int, sampler: NonEmptyList[T] => T): Map[String, Probability] =
+  private def probabilitiesOfBeingBest[T:Numeric](options: Map[String, NonEmptyList[T]], draws: Int, sampler: NonEmptyList[T] => T): Map[String, Probability] =
     probabilitiesOfBeingBest[NonEmptyList[T],T](
       sampler,
       options,
       draws)
 
-  def highestValue(options: Map[String, AbstractRealDistribution], draws: Int, seed: Option[Long] = None): Map[String, Probability] = {
+  def probabilitiesOfBeingBest(options: Map[String, AbstractRealDistribution], draws: Int, seed: Option[Long] = None): Map[String, Probability] = {
     probabilitiesOfBeingBest[AbstractRealDistribution,Double](
       (d: AbstractRealDistribution) => {
         seed.foreach(s => d.reseedRandomGenerator(s))

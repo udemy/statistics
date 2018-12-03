@@ -37,31 +37,31 @@ class MonteCarloSpec extends FlatSpec with Matchers {
     sampleC -> NonEmptyList(98, 150, 56, -23, 98, 120, 660, -135, 430, -12)
   )
 
-  "dataset winProbability" should "appropriately distribute wins to better datasets" in {
+  "datasets" should "appropriately distribute wins to better datasets" in {
     val expectedOutput = Map(
       sampleA -> Probability(0.1),
       sampleB -> Probability(0.5),
       sampleC -> Probability(0.6))
-    val result = highestValue(datasets, draws)
+    val result = probabilitiesOfBeingBest(datasets, draws)
 
     result(sampleA).value >= expectedOutput(sampleA).value shouldBe true
     result(sampleB).value <= expectedOutput(sampleB).value shouldBe true
     result(sampleC).value <= expectedOutput(sampleC).value shouldBe true
   }
 
-  "dataset winProbability" should "always say a dataset wins if it is the only dataset passed" in {
+  "datasetA" should "always say a dataset wins if it is the only dataset passed" in {
     val expectedOutput = Map(sampleA -> Probability(1.0))
-    highestValue(Map(datasetA), draws) shouldBe expectedOutput
+    probabilitiesOfBeingBest(Map(datasetA), draws) shouldBe expectedOutput
   }
 
-  "dataset winProbability" should "return an empty vector when passed an empty vector" in {
+  "empty dataset" should "return an empty vector when passed an empty vector" in {
     val expectedOutput = Map.empty[String, Probability]
-    highestValue(Map.empty[String, AbstractRealDistribution], draws) shouldBe expectedOutput
+    probabilitiesOfBeingBest(Map.empty[String, AbstractRealDistribution], draws) shouldBe expectedOutput
   }
 
-  "dataset winProbability" should "return a NaN when asked to draw 0 or fewer times" in {
+  "datasetA" should "return a NaN when asked to draw 0 or fewer times" in {
     for (i <- 0 until -3)
-      highestValue(Map(datasetA), i).head._2.value.isNaN shouldBe true
+      probabilitiesOfBeingBest(Map(datasetA), i).head._2.value.isNaN shouldBe true
   }
 
   private val seed = Some(10102006L)
@@ -75,34 +75,34 @@ class MonteCarloSpec extends FlatSpec with Matchers {
     sampleC -> normalC,
     sampleD -> normalD)
 
-  "normal highestValue" should "appropriately distribute wins to better distributions" in {
+  "normal distributions" should "appropriately distribute wins to better distributions" in {
     val expectedOutput = Map(
       sampleA -> Probability(0.5),
       sampleB -> Probability(0.0),
       sampleC -> Probability(0.0),
       sampleD -> Probability(0.5))
-    highestValue(normals, draws, seed) shouldBe expectedOutput
+    probabilitiesOfBeingBest(normals, draws, seed) shouldBe expectedOutput
   }
 
-  "normal highestValue" should "always say a normal wins if it is the only normal passed" in {
+  "normal distributions" should "always say a normal wins if it is the only normal passed" in {
     val expectedOutput = Map(sampleA -> Probability(1.0))
-    highestValue(Map(sampleA -> normalA), draws) shouldBe expectedOutput
+    probabilitiesOfBeingBest(Map(sampleA -> normalA), draws) shouldBe expectedOutput
   }
 
-  "normal highestValue" should "return an empty vector when passed an empty vector" in {
+  "normal distributions" should "return an empty vector when passed an empty vector" in {
     val expectedOutput = Map.empty[String, Probability]
-    highestValue(Map.empty[String, NormalDistribution], draws) shouldBe expectedOutput
+    probabilitiesOfBeingBest(Map.empty[String, NormalDistribution], draws) shouldBe expectedOutput
   }
 
-  "normal highestValue" should "return a NaN when asked to draw 0 or fewer times" in {
+  "normal distributions" should "return a NaN when asked to draw 0 or fewer times" in {
     for (i <- 0 until -3)
-      highestValue(Map(sampleA -> normalA), i).head._2.value.isNaN shouldBe true
+      probabilitiesOfBeingBest(Map(sampleA -> normalA), i).head._2.value.isNaN shouldBe true
   }
 
-  "distribution highestValue" should "work for all abstract real distributions" in {
+  "probabilitiesOfBeingBest" should "work for all abstract real distributions" in {
     val constants = Map(sampleA -> new ConstantRealDistribution(1D), sampleB -> new GammaDistribution(5D, 2D))
     val expectedOutput = Map(sampleA -> Probability(0.0), sampleB -> Probability(1.0))
-    highestValue(constants, draws) shouldBe expectedOutput
+    probabilitiesOfBeingBest(constants, draws) shouldBe expectedOutput
   }
 
 }
