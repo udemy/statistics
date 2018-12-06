@@ -14,16 +14,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-organization := "com.udemy"
-name := "statistics"
+import xerial.sbt.Sonatype.GitHubHosting
 
-version := "0.3.1"
-
-scalaVersion := "2.11.12"
-
-libraryDependencies += "org.apache.commons" % "commons-math3" % "3.+"
-libraryDependencies += "org.scalaz" %% "scalaz-core" % "7.2.26"
-libraryDependencies += "org.scalacheck" %% "scalacheck" % "1.14.+" % "test"
-libraryDependencies += "org.scalatest" % "scalatest_2.11" % "3.0.+" % "test"
-
-publishTo := sonatypePublishTo.value
+publishMavenStyle := true
+licenses := Seq("APL2" -> url("http://www.apache.org/licenses/LICENSE-2.0.txt"))
+sonatypeProjectHosting := Some(GitHubHosting("udemy", "statistics", "robert.neal@udemy.com"))
+developers := List(
+  Developer(id="robertjneal", name="Robert J. Neal", email="robert.neal@udemy.com", url=url("https://www.udemy.com"))
+)
