@@ -37,7 +37,7 @@ class MonteCarloSpec extends FlatSpec with Matchers {
     sampleC -> NonEmptyList(98, 150, 56, -23, 98, 120, 660, -135, 430, -12)
   )
 
-  "datasets" should "appropriately distribute wins to better datasets" in {
+  "probabilitiesOfBeingBest" should "appropriately distribute wins to better datasets" in {
     val expectedOutput = Map(
       sampleA -> Probability(0.1),
       sampleB -> Probability(0.5),
@@ -49,17 +49,17 @@ class MonteCarloSpec extends FlatSpec with Matchers {
     result(sampleC).value <= expectedOutput(sampleC).value shouldBe true
   }
 
-  "datasetA" should "always say a dataset wins if it is the only dataset passed" in {
+  "probabilitiesOfBeingBest" should "always say a dataset wins if it is the only dataset passed" in {
     val expectedOutput = Map(sampleA -> Probability(1.0))
     probabilitiesOfBeingBest(Map(datasetA), draws) shouldBe expectedOutput
   }
 
-  "empty dataset" should "return an empty vector when passed an empty vector" in {
+  "probabilitiesOfBeingBest" should "return an empty vector when passed an empty vector" in {
     val expectedOutput = Map.empty[String, Probability]
     probabilitiesOfBeingBest(Map.empty[String, AbstractRealDistribution], draws) shouldBe expectedOutput
   }
 
-  "datasetA" should "return a NaN when asked to draw 0 or fewer times" in {
+  "probabilitiesOfBeingBest" should "return a NaN when asked to draw 0 or fewer times" in {
     for (i <- 0 until -3)
       probabilitiesOfBeingBest(Map(datasetA), i).head._2.value.isNaN shouldBe true
   }
@@ -75,7 +75,7 @@ class MonteCarloSpec extends FlatSpec with Matchers {
     sampleC -> normalC,
     sampleD -> normalD)
 
-  "normal distributions" should "appropriately distribute wins to better distributions" in {
+  "probabilitiesOfBeingBest" should "appropriately distribute wins to better normal distributions" in {
     val expectedOutput = Map(
       sampleA -> Probability(0.5),
       sampleB -> Probability(0.0),
@@ -84,17 +84,17 @@ class MonteCarloSpec extends FlatSpec with Matchers {
     probabilitiesOfBeingBest(normals, draws, seed) shouldBe expectedOutput
   }
 
-  "normal distributions" should "always say a normal wins if it is the only normal passed" in {
+  "probabilitiesOfBeingBest" should "always say a normal wins if it is the only normal passed" in {
     val expectedOutput = Map(sampleA -> Probability(1.0))
     probabilitiesOfBeingBest(Map(sampleA -> normalA), draws) shouldBe expectedOutput
   }
 
-  "normal distributions" should "return an empty vector when passed an empty vector" in {
+  "probabilitiesOfBeingBest" should "return an empty vector when passed an empty vector" in {
     val expectedOutput = Map.empty[String, Probability]
     probabilitiesOfBeingBest(Map.empty[String, NormalDistribution], draws) shouldBe expectedOutput
   }
 
-  "normal distributions" should "return a NaN when asked to draw 0 or fewer times" in {
+  "probabilitiesOfBeingBest" should "return a NaN when asked to draw 0 or fewer times" in {
     for (i <- 0 until -3)
       probabilitiesOfBeingBest(Map(sampleA -> normalA), i).head._2.value.isNaN shouldBe true
   }
